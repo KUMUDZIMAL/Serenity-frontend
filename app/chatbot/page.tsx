@@ -104,11 +104,12 @@ export default function ChatbotPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chatbot", {
+      const response = await fetch("https://serenity-backend-liart.vercel.app/api/chatbot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials:"include",
         body: JSON.stringify({ message: input }),
       });
 

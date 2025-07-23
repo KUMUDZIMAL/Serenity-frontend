@@ -27,7 +27,7 @@ export default function MoodCounter() {
 
   const fetchMoodData = async () => {
     try {
-      const response = await fetch("/api/auth/mood");
+      const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/mood");
       if (!response.ok) {
         console.error("Error fetching mood data:", response.statusText);
         return;

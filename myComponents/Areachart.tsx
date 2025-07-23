@@ -32,7 +32,7 @@ export default function Component() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/auth/inputCard"); // Replace with the actual endpoint
+      const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/inputCard"); // Replace with the actual endpoint
       const data = await response.json();
 
       if (Array.isArray(data.analysis)) {

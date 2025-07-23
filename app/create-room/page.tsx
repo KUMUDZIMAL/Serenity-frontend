@@ -9,7 +9,7 @@ export default function CreateRoomPage() {
 
   const createRoom = () => {
     if (roomId.trim()) {
-      router.push(`/room/${roomId}`);
+      router.push(`https://serenity-backend-liart.vercel.app/room/${roomId}`);
     }
   };
 

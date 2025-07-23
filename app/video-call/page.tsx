@@ -46,7 +46,7 @@ const VideoCallPage: React.FC = () => {
         sharedLinks: [
           {
             name: "Copy Link",
-            url: `http://localhost:3000/video-call?callId=${callId}&userId=${userId}`,
+            url: `/video-call?callId=${callId}&userId=${userId}`,
           },
         ],
         scenario: {

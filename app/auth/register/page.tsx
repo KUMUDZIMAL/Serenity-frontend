@@ -18,7 +18,7 @@ const Register = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('https://serenity-backend-liart.vercel.app/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

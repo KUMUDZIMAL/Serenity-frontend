@@ -56,8 +56,9 @@ const MoodTracker: React.FC = () => {
   const handleMoodClick = async (label: string) => {
     try {
       // Send the selected mood to the backend
-      const response = await fetch("/api/analysis", {
+      const response = await fetch("https://serenity-backend-liart.vercel.app/api/analysis", {
         method: "POST",
+        credentials:"include",
         headers: {
           "Content-Type": "application/json",
         },

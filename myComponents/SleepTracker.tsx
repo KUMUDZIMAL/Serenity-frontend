@@ -11,9 +11,10 @@ const SleepTracker: React.FC = () => {
   const router = useRouter();
 
   const handleSleepSubmit = async () => {
-    const response = await fetch('/api/sleep', {
+    const response = await fetch('https://serenity-backend-liart.vercel.app/api/sleep', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials:"include",
       body: JSON.stringify({ userId: 'USER_ID', hoursSlept, quality, notes, date: selectedDate }),
     });
 
