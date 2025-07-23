@@ -2,24 +2,27 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
 
 const VideoCallPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const searchParams = useSearchParams();
-
-  const callId = searchParams.get("callId") || "default-room";
-  const userId =
-    searchParams.get("userId") || String(Math.floor(Math.random() * 10000));
 
   useEffect(() => {
+    // Only run in browser
+    if (typeof window === "undefined") return;
+
+    // Read query params from URL
+    const params = new URLSearchParams(window.location.search);
+    const callId = params.get("callId") || "default-room";
+    const userId =
+      params.get("userId") || String(Math.floor(Math.random() * 10000));
+
     const startCall = async () => {
       if (!containerRef.current) {
         console.error("Container element not found.");
         return;
       }
 
-      // Dynamically import the Zego SDK in the browser only
+      // Dynamically import Zego so no SSR issues
       const { ZegoUIKitPrebuilt } = await import(
         "@zegocloud/zego-uikit-prebuilt"
       );
@@ -53,7 +56,7 @@ const VideoCallPage: React.FC = () => {
     };
 
     startCall();
-  }, [callId, userId]);
+  }, []); // run once
 
   return (
     <div>
