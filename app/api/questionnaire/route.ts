@@ -332,7 +332,7 @@ No need for a correct option. Each option should provide a valid response relate
           content: contextMessage
         }
       ],
-      model: "llama-3.1-70b-versatile"
+      model: "llama-3.3-70b-versatile"
     });
 
     console.log("Full Groq API response:", JSON.stringify(response, null, 2));
