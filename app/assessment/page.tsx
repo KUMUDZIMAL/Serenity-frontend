@@ -268,7 +268,7 @@ export default function MentalHealthQuestionnaire() {
   const fetchNextQuestion = async (previousAnswer?: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://serenity-backend-liart.vercel.app/api/questionnaire', {
+      const response = await fetch('/api/questionnaire', {
         method: 'POST',
         credentials:"include",
         headers: {
@@ -296,7 +296,7 @@ export default function MentalHealthQuestionnaire() {
   const analyzeResponses = async (finalResponses: {question: string, answer: string}[]) => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://serenity-backend-liart.vercel.app/api/questionnaire', {
+      const response = await fetch('/api/questionnaire', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

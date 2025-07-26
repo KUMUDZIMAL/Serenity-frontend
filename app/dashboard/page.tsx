@@ -18,7 +18,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/user", { method: "GET" });
+        const response = await fetch("/api/auth/user", { method: "GET" });
         if (response.status === 401) {
           console.warn("Unauthorized, redirecting to login");
           router.push("/auth/login");
