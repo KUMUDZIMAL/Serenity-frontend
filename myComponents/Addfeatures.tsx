@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, BookOpen, FileText } from 'lucide-react';
 import Image from "next/image";
+import Link from 'next/link';
 
 function Addfeatures() {
   return (
@@ -20,9 +21,11 @@ function Addfeatures() {
               Discover a safe space to connect with like-minded individuals. Share
               your experiences and grow through shared journeys and resources.
             </p>
+            <Link href='/community'>
             <Button className="w-fit bg-violet-600 hover:bg-violet-700 text-white rounded-full">
               Join Now <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            </Link>
           </div>
           <div className="lg:w-1/2 relative min-h-[300px] lg:min-h-full">
             image
@@ -40,9 +43,11 @@ function Addfeatures() {
               <p className="text-blue-600 font-outfitRegular mb-4">
                 Explore insightful content written by experts and community members.
               </p>
+              <Link href='/articles'>
               <Button variant="link" className="text-blue-600 hover:text-blue-700 p-0">
                 Browse Articles <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              </Link>
             </CardContent>
           </Card>
 
@@ -57,9 +62,11 @@ function Addfeatures() {
               <p className="text-pink-600 font-outfitRegular mb-4">
                 Document your journey and reflect on your personal growth.
               </p>
+              <Link href='/journel'>
               <Button variant="link" className="text-pink-600 hover:text-pink-700 p-0">
                 Start Journaling <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
