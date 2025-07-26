@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 function Assessment() {
@@ -15,11 +16,13 @@ function Assessment() {
 
 
         <div className="relative">
-          <Button
-            className="font-outfitRegular rounded-full px-6 py-6 bg-white hover:bg-white/80 text-slate-700 border-2 hover:text-violet-900 border-slate-300 shadow-lg hover:shadow-[0_0_30px_rgba(90,103,246,0.5)] transition-all duration-300 hover:border-transparent"
-          >
-            Start Assessment
-          </Button>
+        <Link href="/assessment">
+  <Button
+    className="font-outfitRegular rounded-full px-6 py-6 bg-white hover:bg-white/80 text-slate-700 border-2 hover:text-violet-900 border-slate-300 shadow-lg hover:shadow-[0_0_30px_rgba(90,103,246,0.5)] transition-all duration-300 hover:border-transparent"
+  >
+    Start Assessment
+  </Button>
+</Link>
         </div>
       </div>
     </div>
