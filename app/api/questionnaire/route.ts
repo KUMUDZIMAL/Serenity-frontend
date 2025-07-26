@@ -370,7 +370,7 @@ async function getInsightsFromResponses(responses: {question: string, answer: st
   try {
     const response = await groq.chat.completions.create({
       messages: [{ role: "user", content: contextMessage }],
-      model: "llama-3.3-70b-versatil"
+      model: "llama-3.3-70b-versatile"
     });
 
     const content = response.choices[0]?.message?.content;
