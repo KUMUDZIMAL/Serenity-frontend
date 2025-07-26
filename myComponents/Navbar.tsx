@@ -116,7 +116,16 @@ const Navbar = () => {
                   >
                     Community
                   </Link>
+
                 </li>
+                <li>
+                <Link
+                    href="/video-call"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-violet-100 font-outfitRegular hover:rounded-lg"
+                  >
+                  Video Call
+                  </Link>
+                  </li>
               </ul>
             </div>
           </div>
