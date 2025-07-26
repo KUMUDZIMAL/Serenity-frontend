@@ -56,7 +56,7 @@ export default function Component() {
   useEffect(() => {
     const fetchMoodData = async () => {
       try {
-        const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/mood"); // Fetch mood data from your API
+        const response = await fetch("/api/auth/mood"); // Fetch mood data from your API
         if (!response.ok) {
           throw new Error("Failed to fetch mood data");
         }
