@@ -303,59 +303,131 @@
 
 // app/api/questionnaire/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
+import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 async function getGroqChatCompletion(previousAnswers: string[]): Promise<string> {
-  const basePrompt = `…your prompt…`;
+  const basePrompt = `Act as a therapist conducting an initial assessment. Generate a single mental health-related question that helps identify potential mental health issues. The question should be appropriate based on the previous answers. Start with general questions and progressively ask more specific questions as you gather more information. Output must be in JSON format only, without any additional content. The JSON structure should be:
+{
+  "question": "Your question here",
+  "options": [
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 4"
+  ]
+}
+No need for a correct option. Each option should provide a valid response related to mental health. Generate only one question per request.`;
 
-  const contextMessage = previousAnswers.length
-    ? `${basePrompt} Previous answers: ${JSON.stringify(previousAnswers)}.`
+  const contextMessage = previousAnswers.length > 0
+    ? `${basePrompt} Previous answers: ${JSON.stringify(previousAnswers)}. Based on these, generate an appropriate short and precise follow-up question, follow the instructions strictly.`
     : basePrompt;
 
-  const response = await groq.chat.completions.create({
-    model: 'llama-3.1-70b-versatile',
-    messages: [{ role: 'user', content: contextMessage }],
-  });
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: contextMessage
+        }
+      ],
+      model: "llama-3.1-70b-versatile"
+    });
 
-  console.log('[Groq] full response:', JSON.stringify(response, null, 2));
-  const content = response.choices[0]?.message?.content;
-  const match = content?.match(/\{[\s\S]*?\}/);
-  if (!match) throw new Error('No JSON found in LLM output');
-  return match[0];
+    console.log("Full Groq API response:", JSON.stringify(response, null, 2));
+
+    const content = response.choices[0]?.message?.content;
+
+    const match = content?.match(/\{[\s\S]*?\}/);
+    if (match) {
+      return match[0];
+    } else {
+      throw new Error("No valid JSON object found in the response");
+    }
+
+  } catch (error) {
+    console.error("Error in getGroqChatCompletion:", error);
+    throw error;
+  }
+}
+
+async function getInsightsFromResponses(responses: {question: string, answer: string}[]): Promise<string> {
+  const userResponsesText = responses.map(r => `Q: ${r.question}, A: ${r.answer}`).join("; ");
+
+  const contextMessage = `Based on the following user responses from a therapy session, analyze and provide a JSON object with potential mental health conditions the user might be experiencing. Include a confidence level as a percentage for each condition. The output should be in this format:
+  {
+    "potentialConditions": [
+      {
+        "condition": "condition name",
+        "confidence": 75 // Percentage between 0 and 100
+      }
+    ]
+  }
+  Provide at least 3 potential conditions, even if some have low confidence. Ensure the confidence levels are integers between 0 and 100.
+  User responses: ${userResponsesText}`;
+
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [{ role: "user", content: contextMessage }],
+      model: "llama-3.3-70b-versatil"
+    });
+
+    const content = response.choices[0]?.message?.content;
+    
+    const jsonMatch = content?.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const jsonStr = jsonMatch[0];
+      try {
+        const parsedData = JSON.parse(jsonStr);
+        
+        if (Array.isArray(parsedData.potentialConditions)) {
+          const readableConditions = parsedData.potentialConditions.map((condition: {condition:string, confidence:number}) => {
+            const confidence = Math.min(Math.max(Math.round(condition.confidence), 0), 100);
+            return `${condition.condition} (Confidence: ${confidence}%)`;
+          }).join('\n');
+
+          return `Potential mental health conditions based on your responses:\n${readableConditions}`;
+        }
+        
+        throw new Error("Invalid structure for potential conditions");
+      } catch (parseError) {
+        console.error("JSON parsing error:", parseError);
+        throw new Error("Invalid JSON in API response");
+      }
+    } else {
+      throw new Error("No valid JSON object found in the response");
+    }
+  } catch (error) {
+    console.error("Error in getInsightsFromResponses:", error);
+    throw error;
+  }
 }
 
 export async function POST(request: NextRequest) {
-  console.log('[API] /api/questionnaire POST hit');
-  let body: any;
   try {
-    body = await request.json();
-    console.log('[API] incoming body:', body);
-  } catch (e) {
-    console.error('[API] JSON parse error:', e);
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
-  }
+    const body = await request.json();
+    const { previousAnswer, responses } = body;
 
-  const { previousAnswer, responses, pathname } = body;
-
-  // Branching on pathname if you want both question & analysis in one route
-  try {
-    if (pathname === '/analyze' && Array.isArray(responses)) {
-      console.log('[API] Running analysis with', responses.length, 'items');
-      // … call getInsightsFromResponses and return JSON …
-      const insights = await getInsightsFromResponses(responses);
-      return NextResponse.json({ insights }, { status: 200 });
+    // Check if this is an analyze request
+    if (responses) {
+      if (!Array.isArray(responses)) {
+        return NextResponse.json({ error: "Invalid responses: must be an array" }, { status: 400 });
+      }
+      const userInsights = await getInsightsFromResponses(responses);
+      return NextResponse.json({ insights: userInsights, responses }, { status: 200 });
     }
 
-    // Default: fetch next question
-    console.log('[API] Generating next question with previousAnswer:', previousAnswer);
-    const rawJson = await getGroqChatCompletion(previousAnswer ? [previousAnswer] : []);
-    const parsed = JSON.parse(rawJson);
-    console.log('[API] parsed question object:', parsed);
-    return NextResponse.json(parsed, { status: 200 });
+    // Default behavior is to return next question
+    const questionData = await getGroqChatCompletion(previousAnswer ? [previousAnswer] : []);
+    const parsedData = JSON.parse(questionData);
+    return NextResponse.json(parsedData, { status: 200 });
+
   } catch (error) {
-    console.error('[API] Error in POST handler:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('API Error:', error);
+    return NextResponse.json({ 
+      message: 'Internal Server Error',
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 });
   }
 }
