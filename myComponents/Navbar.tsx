@@ -15,7 +15,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/user", {
+        const response = await fetch("/api/auth/user", {
           method: "GET",
           credentials: "include", // Ensure cookies are included in the request
         });
@@ -37,7 +37,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       // Call the logout API
-      const response = await fetch("https://serenity-backend-liart.vercel.app/api/auth/logout", {
+      const response = await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include", // Ensure cookies are included in the request
       });

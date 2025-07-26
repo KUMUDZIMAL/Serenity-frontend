@@ -108,7 +108,7 @@ function MoodTracker() {
     ).join(',');
 
     try {
-        const response = await fetch('https://serenity-backend-liart.vercel.app/api/analysis2', {
+        const response = await fetch('/api/analysis2', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

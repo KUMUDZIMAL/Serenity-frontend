@@ -20,7 +20,7 @@ export default function Piechart() {
   useEffect(() => {
     async function fetchSleepData() {
       try {
-        const sleepRes = await fetch("https://serenity-backend-liart.vercel.app/api/auth/inputCard"); // Replace with your sleep data API endpoint
+        const sleepRes = await fetch("/api/auth/inputCard"); // Replace with your sleep data API endpoint
         const sleepData = await sleepRes.json();
         if (sleepData && sleepData.analysis) {
           setSleepData(sleepData.analysis.reverse());

@@ -106,7 +106,7 @@ function ScoreDisplay({ onScoreChange }: { onScoreChange: (score: number) => voi
   useEffect(() => {
     async function fetchData() {
       try {
-        const userRes = await fetch("https://serenity-backend-liart.vercel.app/api/auth/inputCard");
+        const userRes = await fetch("/api/auth/inputCard");
         const userData = await userRes.json();
 
         if (userData && userData.analysis) {

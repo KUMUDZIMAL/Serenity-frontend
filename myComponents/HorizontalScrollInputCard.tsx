@@ -82,7 +82,7 @@ const HorizontalScrollInputCard: React.FC = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('https://serenity-backend-liart.vercel.app/api/auth/inputCard', { method: 'GET' })
+        const response = await fetch('/api/auth/inputCard', { method: 'GET' })
 
         if (response.status === 401) {
           router.push('/auth/login')
