@@ -27,8 +27,8 @@ const VideoCallPage: React.FC = () => {
         "@zegocloud/zego-uikit-prebuilt"
       );
 
-      const AppId = 706952476;
-      const ServerSecret = "ccd9aa5f5063411168c033e9ab7b399e";
+      const AppId = 1133680377;
+      const ServerSecret = "2ed01b2604de125ec05128167123da96";
 
       // Generate a test kit token
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
