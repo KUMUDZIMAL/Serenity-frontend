@@ -155,7 +155,7 @@ const Login: React.FC = () => {
       const data = await response.json();
 
       if (response.status === 200) {
-        router.push('/Input1'); // Redirect on success
+        router.push('/'); // Redirect on success
       } else {
         setError(data.error || 'Invalid credentials');
       }
