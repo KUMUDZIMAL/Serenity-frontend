@@ -1,4 +1,4 @@
-"use client"; // Ensure this component is treated as a client component
+"use client"; 
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -26,6 +26,7 @@ const MoodTracker: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -54,11 +55,12 @@ const MoodTracker: React.FC = () => {
   }, []);
 
   const handleMoodClick = async (label: string) => {
+    setSelectedMood(label); // highlight the selected mood
+
     try {
-      // Send the selected mood to the backend
       const response = await fetch("/api/analysis", {
         method: "POST",
-        credentials:"include",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -68,7 +70,7 @@ const MoodTracker: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Mood saved:", data);
-        router.push("/Input2"); // Navigate after saving mood
+        router.push("/Input2");
       } else {
         console.error("Failed to save mood");
       }
@@ -79,7 +81,7 @@ const MoodTracker: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#B194D6] to-[#EBEBEE] p-4 relative">
-      {/* Background Gradient and Blurred Circles */}
+      {/* Background Gradient */}
       <div className="absolute inset-0 flex justify-center items-center">
         <div className="absolute w-96 h-96 bg-blue-400/30 rounded-full blur-3xl -top-20 -left-20"></div>
         <div className="absolute w-96 h-96 bg-purple-400/30 rounded-full blur-3xl top-40 left-60"></div>
@@ -89,7 +91,7 @@ const MoodTracker: React.FC = () => {
         <div className="absolute w-80 h-80 bg-orange-300/30 rounded-full blur-3xl top-20 left-20"></div>
       </div>
 
-      {/* Registration Form */}
+      {/* Mood Form */}
       <div className="bg-white p-8 rounded-3xl shadow-lg max-w-md w-full text-center relative text-[#151515] z-10">
         <button className="absolute top-4 right-4 bg-transparent border-none text-3xl text-[#151515] cursor-pointer hover:text-[#B194D6] transition-colors">
           ×
@@ -104,9 +106,7 @@ const MoodTracker: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <label className="mr-2 text-base text-[#151515]">
-            Select a date:
-          </label>
+          <label className="mr-2 text-base text-[#151515]">Select a date:</label>
           <input
             type="date"
             value={selectedDate}
@@ -122,30 +122,29 @@ const MoodTracker: React.FC = () => {
               emoji={mood.emoji}
               label={mood.label}
               onClick={() => handleMoodClick(mood.label)}
-              router={router} // Pass the router as a prop
+              isSelected={selectedMood === mood.label}
             />
           ))}
         </div>
       </div>
-
     </div>
   );
 };
 
-const MoodItem: React.FC<Mood & { onClick: () => void; router: any }> = ({
+const MoodItem: React.FC<Mood & { onClick: () => void; isSelected: boolean }> = ({
   emoji,
   label,
   onClick,
-  router,
+  isSelected,
 }) => {
   return (
     <div
-      className="flex flex-col items-center cursor-pointer transition-all duration-200 ease-in-out hover:scale-110"
+      className={`flex flex-col items-center cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 p-4 rounded-xl ${
+        isSelected ? "bg-yellow-200" : "bg-transparent"
+      }`}
       onClick={onClick}
     >
-      <span className="text-4xl transition-all duration-200 ease-in-out">
-        {emoji}
-      </span>
+      <span className="text-4xl">{emoji}</span>
       <span className="mt-3 text-sm text-[#151515]">{label}</span>
     </div>
   );

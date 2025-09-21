@@ -46,7 +46,7 @@ const VideoCallPage: React.FC = () => {
         sharedLinks: [
           {
             name: "Copy Link",
-            url: `https://serenity-peach.vercel.app/video-call?callId=${callId}&userId=${userId}`,
+            url: `https://serenity-peach.vercel.app/video-call`,
           },
         ],
         scenario: {
